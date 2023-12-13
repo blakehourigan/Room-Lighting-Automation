@@ -1,11 +1,14 @@
 import asyncio
+import json
 from pywizlight import wizlight, PilotBuilder
 
-LEFT_BATHROOM = "192.168.1.20" 
-RIGHT_BATHROOM = "192.168.1.21"
+with open('config.json') as file:
+    config = json.load(file)
 
-DESK = "192.168.1.11"
-NIGHTSTAND  = "192.168.1.12"
+LEFT_BATHROOM = config['LEFT_BATHROOM']
+RIGHT_BATHROOM = config['RIGHT_BATHROOM']
+DESK = config['DESK']
+NIGHTSTAND = config['NIGHTSTAND']
 
 all_lights = [LEFT_BATHROOM, RIGHT_BATHROOM, DESK, NIGHTSTAND]
 
@@ -14,8 +17,8 @@ async def toggle_light():
     # if button pushed and previous state = off then turn them on 
     await light.updateState()
     if light.status:
-        for element in all_lights: 
-            light = wizlight(element)
+        for light in all_lights: 
+            light = wizlight(light)
             await light.turn_off()
 
     # if button pushed and previous state = on then turn them off
